@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Calc</title>
+		<style>
+			.numbers,
+			.oprations {
+				display: flex;
+				gap: 1rem;
+				background-color: rgba(255, 228, 196, 0.495);
+				width: 400px;
+				padding: 1rem;
+				flex-wrap: wrap;
+			}
+			.number,
+			.opration,
+			.dot {
+				display: block;
+				padding: 1rem;
+				background-color: #fff;
+				border: 1px solid #444;
+				cursor: pointer;
+				user-select: none;
+			}
+			.number:hover {
+				background-color: #908484;
+			}
+			.opration:hover {
+				background-color: #fd9494;
+			}
+			.result {
+				background-color: #fff;
+				border: 1px solid #444;
+				width: 400px;
+				padding: 0.5rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="result">0</div>
+		<div class="numbers"></div>
+		<div class="oprations">
+			<span class="opration" id="+">+</span>
+			<span class="opration" id="-">-</span>
+			<span class="opration" id="*">*</span>
+			<span class="opration" id="/">÷</span>
+			<span class="opration" id="=">=</span>
+			<span class="dot" id=".">.</span>
+		</div>
+		<!-- script -->
+		<script>
+			// create numbers via js
+			for (let i = 0; i < 10; i++) {
+				const ele = document.createElement("span");
+				ele.id = i;
+				ele.className = "number";
+				ele.innerHTML = i;
+				document.querySelector(".numbers").appendChild(ele);
+			}
+			// varibales
+			const numbers = [...document.querySelectorAll(".number")];
+			const oprations = [...document.querySelectorAll(".opration")];
+			const result = document.querySelector(".result");
+			const dot = document.querySelector(".dot");
+			let first = "";
+			let second = "";
+			let opt = "";
+			// number clciking
+			numbers.forEach((number) => {
+				number.addEventListener("click", () => numberClick(number));
+			});
+			function numberClick(number) {
+				if (result.innerHTML == "0") {
+					if (number.id == "0") {
+						return;
+					} else {
+						result.innerHTML = number.id;
+					}
+				} else {
+					result.innerHTML += number.id;
+				}
+			}
+			// opration clicking
+			oprations.forEach((opration) => {
+				opration.addEventListener("click", () => oprationClick(opration));
+			});
+			function oprationClick(opration) {
+				if (opration.id == "=" && first !== "") {
+					second = +result.innerHTML;
+					calc(opt);
+				} else {
+					first = +result.innerHTML;
+					result.innerHTML = "0";
+					opt = opration.id;
+				}
+			}
+
+			// dot clicking
+			dot.addEventListener("click", () => {
+				if (!result.innerHTML.includes(".")) {
+					result.innerHTML += ".";
+				}
+			});
+			// calculation
+			function calc(opt) {
+				switch (opt) {
+					case "+":
+						result.innerHTML = (Number(first) + Number(second)).toFixed(2);
+						break;
+					case "-":
+						result.innerHTML = (Number(first) - Number(second)).toFixed(2);
+						break;
+					case "*":
+						result.innerHTML = (Number(first) * Number(second)).toFixed(2);
+						break;
+					case "/":
+						if (first == "0") {
+							return;
+						}
+						result.innerHTML = (Number(first) / Number(second)).toFixed(2);
+						break;
+				}
+				first = second;
+				second = "";
+			}
+		</script>
+	</body>
+</html>
